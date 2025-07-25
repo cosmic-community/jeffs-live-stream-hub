@@ -77,8 +77,13 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
       const userColor = localStorage.getItem('user-color') || getUserColor()
       localStorage.setItem('user-color', userColor)
 
-      // Add message to Cosmic
-      const message = await addChatMessage(username.trim(), newMessage.trim(), userColor)
+      // Add message to Cosmic - ensure username is not undefined
+      const trimmedUsername = username.trim()
+      const trimmedMessage = newMessage.trim()
+      
+      if (!trimmedUsername || !trimmedMessage) return
+      
+      const message = await addChatMessage(trimmedUsername, trimmedMessage, userColor)
       
       // Add to local state immediately for better UX
       setMessages(prev => [...prev, message as ChatMessage])

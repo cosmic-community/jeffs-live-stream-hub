@@ -19,7 +19,7 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
   const usernameInputRef = useRef<HTMLInputElement>(null)
 
   // Generate random user color
-  const getUserColor = () => {
+  const getUserColor = (): string => {
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9']
     return colors[Math.floor(Math.random() * colors.length)]
   }
@@ -76,7 +76,7 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
     try {
       // Fix: Ensure userColor is always a string by providing a guaranteed fallback
       const savedColor = localStorage.getItem('user-color')
-      const userColor = savedColor || getUserColor()
+      const userColor: string = savedColor ?? getUserColor()
       
       // Store the color for next time if it was generated
       if (!savedColor) {

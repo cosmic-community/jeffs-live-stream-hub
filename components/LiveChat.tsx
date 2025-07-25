@@ -76,7 +76,7 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
     try {
       // Fix: Ensure userColor is always a string by providing a guaranteed fallback
       const savedColor = localStorage.getItem('user-color')
-      const userColor = savedColor || getUserColor()
+      const userColor = savedColor ?? getUserColor()
       localStorage.setItem('user-color', userColor)
 
       // Add message to Cosmic - ensure username is not undefined

@@ -168,7 +168,7 @@ export default async function AboutPage() {
               🎮 Favorite Games
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {favoriteGames.map((game) => (
+              {favoriteGames.map((game: string) => (
                 <div 
                   key={game}
                   className="bg-secondary text-secondary-foreground px-4 py-3 rounded-lg text-center font-medium hover:bg-primary hover:text-primary-foreground transition-colors cursor-default"

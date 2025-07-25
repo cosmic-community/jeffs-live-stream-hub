@@ -150,7 +150,7 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
                   className="chat-avatar"
                   style={{ backgroundColor: message.metadata?.user_color || '#6B7280' }}
                 >
-                  {message.metadata?.username?.[0]?.toUpperCase() || 'U'}
+                  {(message.metadata?.username?.[0] || 'U').toUpperCase()}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">

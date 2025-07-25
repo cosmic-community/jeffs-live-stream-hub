@@ -74,7 +74,9 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
     if (!newMessage.trim() || !username.trim()) return
 
     try {
-      const userColor = localStorage.getItem('user-color') || getUserColor()
+      // Fix: Ensure userColor is always a string by providing a guaranteed fallback
+      const savedColor = localStorage.getItem('user-color')
+      const userColor = savedColor || getUserColor()
       localStorage.setItem('user-color', userColor)
 
       // Add message to Cosmic - ensure username is not undefined
@@ -83,9 +85,8 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
       
       if (!trimmedUsername || !trimmedMessage) return
       
-      // Fix: Ensure userColor is properly defined before passing to addChatMessage
-      const finalUserColor = userColor || getUserColor()
-      const message = await addChatMessage(trimmedUsername, trimmedMessage, finalUserColor)
+      // userColor is now guaranteed to be a string
+      const message = await addChatMessage(trimmedUsername, trimmedMessage, userColor)
       
       // Add to local state immediately for better UX
       setMessages(prev => [...prev, message as ChatMessage])

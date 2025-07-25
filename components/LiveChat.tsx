@@ -83,7 +83,9 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
       
       if (!trimmedUsername || !trimmedMessage) return
       
-      const message = await addChatMessage(trimmedUsername, trimmedMessage, userColor)
+      // Fix: Ensure userColor is properly defined before passing to addChatMessage
+      const finalUserColor = userColor || getUserColor()
+      const message = await addChatMessage(trimmedUsername, trimmedMessage, finalUserColor)
       
       // Add to local state immediately for better UX
       setMessages(prev => [...prev, message as ChatMessage])

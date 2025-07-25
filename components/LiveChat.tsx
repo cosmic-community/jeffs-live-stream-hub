@@ -75,10 +75,11 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
 
     try {
       // Fix: Handle localStorage.getItem which can return null
-      const userColor = localStorage.getItem('user-color') ?? getUserColor()
+      const savedColor = localStorage.getItem('user-color')
+      const userColor = savedColor ?? getUserColor()
       
       // Store the color for next time if it was generated
-      if (!localStorage.getItem('user-color')) {
+      if (!savedColor) {
         localStorage.setItem('user-color', userColor)
       }
 

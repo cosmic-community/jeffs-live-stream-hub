@@ -15,7 +15,7 @@ export default function LiveChat({ siteSettings }: LiveChatProps) {
 
   // Check if LiveChat is enabled and has a widget ID
   const liveChatEnabled = siteSettings?.metadata?.livechat_enabled === true
-  const widgetId = siteSettings?.metadata?.livechat_widget_id ?? ''
+  const widgetId: string = siteSettings?.metadata?.livechat_widget_id ?? ''
   const hasValidWidgetId = widgetId.length > 0
 
   const scrollToBottom = () => {

@@ -76,7 +76,7 @@ export default function LiveChat({ isStreamLive }: LiveChatProps) {
     try {
       // Fix: Handle localStorage.getItem which can return null by providing fallback
       const savedColor = localStorage.getItem('user-color')
-      const userColor = savedColor || getUserColor()
+      const userColor = savedColor ?? getUserColor()
       
       // Store the color for next time if it wasn't already saved
       if (!savedColor) {

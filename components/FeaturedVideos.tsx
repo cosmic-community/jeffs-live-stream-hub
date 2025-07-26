@@ -1,94 +1,82 @@
-import { Video } from '@/types'
+import Link from 'next/link'
+import { VideoContent } from '@/types'
 import { formatDistanceToNow } from 'date-fns'
 
 interface FeaturedVideosProps {
-  videos: Video[]
+  videos: VideoContent[]
 }
 
 export default function FeaturedVideos({ videos }: FeaturedVideosProps) {
   if (!videos || videos.length === 0) {
-    return null
+    return (
+      <section className="py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-white mb-8">Featured Videos</h2>
+          <div className="text-center py-12">
+            <p className="text-gray-400">No featured videos available yet.</p>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {videos.map((video) => (
-        <div key={video.id} className="feature-card group cursor-pointer">
-          {/* Video Thumbnail */}
-          <div className="relative aspect-video bg-muted rounded overflow-hidden mb-4">
-            {video.metadata?.thumbnail ? (
-              <img 
-                src={`${video.metadata.thumbnail.imgix_url}?w=600&h=338&fit=crop&auto=format,compress`}
-                alt={video.title}
-                width={300}
-                height={169}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                <svg className="w-12 h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.01M15 10h1.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+    <section className="py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-bold text-white mb-8">Featured Videos</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {videos.map((video) => (
+            <div key={video.id} className="bg-gray-900 rounded-lg overflow-hidden hover:bg-gray-800 transition-colors">
+              <div className="aspect-video bg-gray-800">
+                {video.metadata.thumbnail_image ? (
+                  <img
+                    src={`${video.metadata.thumbnail_image.imgix_url}?w=600&h=400&fit=crop&auto=format,compress`}
+                    alt={video.title}
+                    className="w-full h-full object-cover"
+                    width={600}
+                    height={400}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                )}
               </div>
-            )}
-            
-            {/* Play Button Overlay */}
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-            </div>
-
-            {/* Duration Badge */}
-            {video.metadata?.duration && (
-              <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-                {video.metadata.duration}
-              </div>
-            )}
-          </div>
-
-          {/* Video Info */}
-          <div className="space-y-2">
-            <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-              {video.title}
-            </h3>
-            
-            {video.metadata?.description && (
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {video.metadata.description}
-              </p>
-            )}
-
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>
-                {video.metadata?.recorded_date 
-                  ? formatDistanceToNow(new Date(video.metadata.recorded_date), { addSuffix: true })
-                  : formatDistanceToNow(new Date(video.created_at), { addSuffix: true })
-                }
-              </span>
-              {video.metadata?.view_count && (
-                <span>{video.metadata.view_count.toLocaleString()} views</span>
-              )}
-            </div>
-
-            {/* Tags */}
-            {video.metadata?.tags && video.metadata.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {video.metadata.tags.slice(0, 3).map((tag) => (
-                  <span 
-                    key={tag}
-                    className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full"
-                  >
-                    {tag}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+                  {video.title}
+                </h3>
+                {video.metadata.description && (
+                  <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                    {video.metadata.description}
+                  </p>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">
+                    {formatDistanceToNow(new Date(video.created_at), { addSuffix: true })}
                   </span>
-                ))}
+                  {video.metadata.duration && (
+                    <span className="text-xs text-gray-500">
+                      {video.metadata.duration}
+                    </span>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+        
+        <div className="text-center mt-8">
+          <Link
+            href="/videos"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+          >
+            View All Videos
+          </Link>
+        </div>
+      </div>
+    </section>
   )
 }

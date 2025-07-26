@@ -1,135 +1,66 @@
-// Base Cosmic object interface
 export interface CosmicObject {
-  id: string;
-  slug: string;
-  title: string;
-  content?: string;
-  metadata: Record<string, any>;
-  type: string;
-  created_at: string;
-  modified_at: string;
+  id: string
+  title: string
+  slug: string
+  content?: string
+  status: 'published' | 'draft'
+  created_at: string
+  modified_at: string
+  thumbnail?: string
+  metadata: Record<string, any>
 }
 
-// Stream settings for managing live status
-export interface StreamSettings extends CosmicObject {
-  type: 'stream-settings';
-  metadata: {
-    is_live?: boolean;
-    stream_url?: string;
-    stream_title?: string;
-    offline_message?: string;
-    fallback_video?: {
-      url: string;
-      imgix_url: string;
-    };
-    max_viewers?: number;
-    stream_key?: string;
-  };
-}
-
-// Chat messages for live interaction
-export interface ChatMessage extends CosmicObject {
-  type: 'chat-messages';
-  metadata: {
-    username: string;
-    message: string;
-    timestamp: string;
-    avatar?: {
-      url: string;
-      imgix_url: string;
-    };
-    is_moderator?: boolean;
-    user_color?: string;
-  };
-}
-
-// Streamer profile information
-export interface Profile extends CosmicObject {
-  type: 'profiles';
-  metadata: {
-    bio?: string;
-    avatar?: {
-      url: string;
-      imgix_url: string;
-    };
-    social_links?: {
-      youtube?: string;
-      twitter?: string;
-      instagram?: string;
-      discord?: string;
-    };
-    streaming_schedule?: string;
-    favorite_games?: string[];
-    location?: string;
-  };
-}
-
-// Past videos and highlights
-export interface Video extends CosmicObject {
-  type: 'videos';
-  metadata: {
-    video_url?: string;
-    thumbnail?: {
-      url: string;
-      imgix_url: string;
-    };
-    duration?: string;
-    view_count?: number;
-    description?: string;
-    tags?: string[];
-    is_featured?: boolean;
-    recorded_date?: string;
-  };
-}
-
-// Site configuration and branding
 export interface SiteSettings extends CosmicObject {
-  type: 'site-settings';
   metadata: {
-    site_name?: string;
-    logo?: {
-      url: string;
-      imgix_url: string;
-    };
-    primary_color?: string;
-    secondary_color?: string;
-    footer_text?: string;
-    contact_email?: string;
-    analytics_id?: string;
-  };
+    site_name: string
+    site_description?: string
+    site_logo?: {
+      imgix_url: string
+    }
+    social_links?: {
+      twitter?: string
+      youtube?: string
+      twitch?: string
+      discord?: string
+    }
+    primary_color?: string
+    secondary_color?: string
+  }
 }
 
-// Type guard functions
-export function isStreamSettings(obj: CosmicObject): obj is StreamSettings {
-  return obj.type === 'stream-settings';
+export interface VideoContent extends CosmicObject {
+  metadata: {
+    video_url: string
+    video_type: 'youtube' | 'twitch' | 'vimeo' | 'direct'
+    duration?: string
+    category?: string
+    featured?: boolean
+    thumbnail_image?: {
+      imgix_url: string
+    }
+    description?: string
+    tags?: string[]
+  }
 }
 
-export function isChatMessage(obj: CosmicObject): obj is ChatMessage {
-  return obj.type === 'chat-messages';
+export interface StreamStatus {
+  isLive: boolean
+  viewerCount?: number
+  streamTitle?: string
+  streamUrl?: string
 }
 
-export function isProfile(obj: CosmicObject): obj is Profile {
-  return obj.type === 'profiles';
+export interface ChatMessage {
+  id: string
+  username: string
+  message: string
+  timestamp: string
+  userId?: string
 }
 
-export function isVideo(obj: CosmicObject): obj is Video {
-  return obj.type === 'videos';
+export interface User {
+  id: string
+  username: string
+  avatar?: string
+  role: 'viewer' | 'moderator' | 'admin'
 }
-
-export function isSiteSettings(obj: CosmicObject): obj is SiteSettings {
-  return obj.type === 'site-settings';
-}
-
-// API response types
-export interface CosmicResponse<T> {
-  objects: T[];
-  total: number;
-  limit: number;
-  skip: number;
-}
-
-// Chat connection status
-export type ChatStatus = 'connected' | 'connecting' | 'disconnected' | 'error';
-
-// Stream status types
-export type StreamStatus = 'live' | 'offline' | 'starting' | 'ending';

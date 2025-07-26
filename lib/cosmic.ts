@@ -1,155 +1,80 @@
 import { createBucketClient } from '@cosmicjs/sdk'
+import { SiteSettings, VideoContent } from '@/types'
 
-if (!process.env.COSMIC_BUCKET_SLUG) {
-  throw new Error('COSMIC_BUCKET_SLUG environment variable is required')
-}
-
-if (!process.env.COSMIC_READ_KEY) {
-  throw new Error('COSMIC_READ_KEY environment variable is required')
-}
-
-export const cosmic = createBucketClient({
-  bucketSlug: process.env.COSMIC_BUCKET_SLUG,
-  readKey: process.env.COSMIC_READ_KEY,
-  writeKey: process.env.COSMIC_WRITE_KEY,
+// Initialize Cosmic client
+const cosmic = createBucketClient({
+  bucketSlug: process.env.COSMIC_BUCKET_SLUG as string,
+  readKey: process.env.COSMIC_READ_KEY as string,
+  writeKey: process.env.COSMIC_WRITE_KEY as string,
 })
 
-// Helper function for handling Cosmic SDK errors
-function hasStatus(error: unknown): error is { status: number } {
-  return typeof error === 'object' && error !== null && 'status' in error;
-}
-
-// Get stream settings
-export async function getStreamSettings() {
+export async function getSiteSettings(): Promise<SiteSettings | null> {
   try {
-    const response = await cosmic.objects.findOne({
-      type: 'stream-settings',
-      slug: 'main-stream'
-    }).props(['id', 'title', 'metadata']);
+    const { object } = await cosmic.objects
+      .findOne({
+        type: 'site-settings',
+        slug: 'site-settings'
+      })
+      .props(['title', 'slug', 'metadata'])
+      .depth(1)
     
-    return response.object;
+    return object as SiteSettings
   } catch (error) {
-    if (hasStatus(error) && error.status === 404) {
-      return null;
-    }
-    throw new Error('Failed to fetch stream settings');
+    console.error('Error fetching site settings:', error)
+    return null
   }
 }
 
-// Get chat messages
-export async function getChatMessages(limit: number = 50) {
+export async function getFeaturedVideos(): Promise<VideoContent[]> {
   try {
-    const response = await cosmic.objects.find({
-      type: 'chat-messages',
-      sort: '-created_at',
-      limit
-    }).props(['id', 'title', 'metadata', 'created_at']);
+    const { objects } = await cosmic.objects
+      .find({
+        type: 'videos',
+        'metadata.featured': true
+      })
+      .props(['title', 'slug', 'metadata', 'created_at'])
+      .depth(1)
+      .limit(6)
     
-    return response.objects;
+    return objects as VideoContent[]
   } catch (error) {
-    if (hasStatus(error) && error.status === 404) {
-      return [];
-    }
-    throw new Error('Failed to fetch chat messages');
+    console.error('Error fetching featured videos:', error)
+    return []
   }
 }
 
-// Get streamer profile
-export async function getProfile() {
+export async function getAllVideos(): Promise<VideoContent[]> {
   try {
-    const response = await cosmic.objects.findOne({
-      type: 'profiles',
-      slug: 'jeff-profile'
-    }).props(['id', 'title', 'metadata']);
+    const { objects } = await cosmic.objects
+      .find({
+        type: 'videos'
+      })
+      .props(['title', 'slug', 'metadata', 'created_at'])
+      .depth(1)
+      .sort('-created_at')
     
-    return response.object;
+    return objects as VideoContent[]
   } catch (error) {
-    if (hasStatus(error) && error.status === 404) {
-      return null;
-    }
-    throw new Error('Failed to fetch profile');
+    console.error('Error fetching all videos:', error)
+    return []
   }
 }
 
-// Get featured videos
-export async function getFeaturedVideos(limit: number = 6) {
+export async function getVideoBySlug(slug: string): Promise<VideoContent | null> {
   try {
-    const response = await cosmic.objects.find({
-      type: 'videos',
-      'metadata.is_featured': true,
-      sort: '-created_at',
-      limit
-    }).props(['id', 'title', 'slug', 'metadata', 'created_at']);
+    const { object } = await cosmic.objects
+      .findOne({
+        type: 'videos',
+        slug: slug
+      })
+      .props(['title', 'slug', 'content', 'metadata', 'created_at'])
+      .depth(1)
     
-    return response.objects;
+    return object as VideoContent
   } catch (error) {
-    if (hasStatus(error) && error.status === 404) {
-      return [];
-    }
-    throw new Error('Failed to fetch featured videos');
+    console.error('Error fetching video:', error)
+    return null
   }
 }
 
-// Get site settings
-export async function getSiteSettings() {
-  try {
-    const response = await cosmic.objects.findOne({
-      type: 'site-settings',
-      slug: 'main-site'
-    }).props(['id', 'title', 'metadata']);
-    
-    return response.object;
-  } catch (error) {
-    if (hasStatus(error) && error.status === 404) {
-      return null;
-    }
-    throw new Error('Failed to fetch site settings');
-  }
-}
-
-// Add chat message
-export async function addChatMessage(username: string, message: string, userColor: string = '#ffffff') {
-  try {
-    const response = await cosmic.objects.insertOne({
-      type: 'chat-messages',
-      title: `${username}: ${message.substring(0, 50)}...`,
-      metadata: {
-        username,
-        message,
-        timestamp: new Date().toISOString(),
-        user_color: userColor,
-        is_moderator: false
-      }
-    });
-    
-    return response.object;
-  } catch (error) {
-    console.error('Error adding chat message:', error);
-    throw new Error('Failed to add chat message');
-  }
-}
-
-// Update stream status
-export async function updateStreamStatus(isLive: boolean, streamUrl?: string, streamTitle?: string) {
-  try {
-    const streamSettings = await getStreamSettings();
-    
-    if (!streamSettings) {
-      throw new Error('Stream settings not found');
-    }
-    
-    const response = await cosmic.objects.updateOne(streamSettings.id, {
-      metadata: {
-        ...streamSettings.metadata,
-        is_live: isLive,
-        stream_url: streamUrl || streamSettings.metadata?.stream_url,
-        stream_title: streamTitle || streamSettings.metadata?.stream_title,
-      }
-    });
-    
-    return response.object;
-  } catch (error) {
-    console.error('Error updating stream status:', error);
-    throw new Error('Failed to update stream status');
-  }
-}
+export default cosmic

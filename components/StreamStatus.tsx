@@ -1,41 +1,72 @@
-interface StreamStatusProps {
-  isLive: boolean
-  streamTitle?: string
-  offlineMessage?: string
-}
+'use client'
 
-export default function StreamStatus({ isLive, streamTitle, offlineMessage }: StreamStatusProps) {
-  if (isLive) {
-    return (
-      <div className="space-y-2 animate-fade-in">
-        <div className="inline-flex items-center gap-2 bg-red-600/20 text-red-400 border border-red-600/30 px-4 py-2 rounded-full text-sm font-semibold">
-          <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
-          LIVE NOW
-        </div>
-        {streamTitle && (
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            {streamTitle}
-          </h1>
-        )}
-        <p className="text-muted-foreground">
-          Join the live stream and chat with the community!
-        </p>
-      </div>
-    )
-  }
+import { useState, useEffect } from 'react'
+import { StreamStatus as StreamStatusType } from '@/types'
+
+export default function StreamStatus() {
+  const [status, setStatus] = useState<StreamStatusType>({
+    isLive: false,
+    viewerCount: 0,
+    streamTitle: 'Getting ready to stream...'
+  })
+
+  useEffect(() => {
+    // Simulate stream status updates
+    const updateStatus = () => {
+      setStatus(prev => ({
+        ...prev,
+        isLive: Math.random() > 0.3,
+        viewerCount: Math.floor(Math.random() * 200) + 25,
+        streamTitle: prev.isLive ? 'Live Gaming Session' : 'Stream will begin shortly'
+      }))
+    }
+
+    updateStatus()
+    const interval = setInterval(updateStatus, 15000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <div className="space-y-2">
-      <div className="inline-flex items-center gap-2 bg-muted text-muted-foreground border border-border px-4 py-2 rounded-full text-sm font-medium">
-        <span className="w-2 h-2 bg-muted-foreground rounded-full"></span>
-        OFFLINE
+    <div className="bg-gray-900 rounded-lg p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-white">Stream Status</h2>
+        <div className="flex items-center space-x-2">
+          <div className={`w-3 h-3 rounded-full ${status.isLive ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}></div>
+          <span className={`text-sm font-medium ${status.isLive ? 'text-red-400' : 'text-gray-400'}`}>
+            {status.isLive ? 'LIVE' : 'OFFLINE'}
+          </span>
+        </div>
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-        {offlineMessage || "Jeff is currently offline"}
-      </h1>
-      <p className="text-muted-foreground">
-        Check out past videos below or follow on social media for stream notifications
-      </p>
+
+      <div className="space-y-3">
+        <div>
+          <p className="text-sm text-gray-400">Current Status</p>
+          <p className="text-white font-medium">{status.streamTitle}</p>
+        </div>
+
+        {status.isLive && (
+          <div>
+            <p className="text-sm text-gray-400">Viewers</p>
+            <p className="text-white font-medium">{status.viewerCount} watching now</p>
+          </div>
+        )}
+
+        <div>
+          <p className="text-sm text-gray-400">Next Stream</p>
+          <p className="text-white font-medium">
+            {status.isLive ? 'Now!' : 'Check back soon!'}
+          </p>
+        </div>
+      </div>
+
+      {!status.isLive && (
+        <div className="mt-4 p-3 bg-gray-800 rounded-md">
+          <p className="text-sm text-gray-300">
+            Get notified when the stream goes live! Follow on social media for updates.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

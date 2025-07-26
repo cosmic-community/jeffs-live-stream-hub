@@ -12,7 +12,7 @@ export interface CosmicObject {
 
 export interface SiteSettings extends CosmicObject {
   metadata: {
-    site_name: string
+    site_name?: string
     site_description?: string
     site_logo?: {
       imgix_url: string
@@ -25,6 +25,12 @@ export interface SiteSettings extends CosmicObject {
     }
     primary_color?: string
     secondary_color?: string
+    livechat_enabled?: boolean
+    livechat_widget_id?: string
+    maintenance_mode?: boolean
+    maintenance_message?: string
+    contact_email?: string
+    google_analytics_id?: string
   }
 }
 

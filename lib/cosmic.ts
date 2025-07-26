@@ -13,7 +13,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     const { object } = await cosmic.objects
       .findOne({
         type: 'site-settings',
-        slug: 'site-settings'
+        slug: 'site-configuration'
       })
       .props(['title', 'slug', 'metadata'])
       .depth(1)

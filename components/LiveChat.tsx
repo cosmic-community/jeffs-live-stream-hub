@@ -15,8 +15,8 @@ export default function LiveChat({ siteSettings }: LiveChatProps) {
 
   // Check if LiveChat is enabled and has a widget ID with proper null checks
   const liveChatEnabled = siteSettings?.metadata?.livechat_enabled === true
-  const widgetId = siteSettings?.metadata?.livechat_widget_id ?? ''
-  const hasValidWidgetId = widgetId.length > 0
+  const widgetId = siteSettings?.metadata?.livechat_widget_id
+  const hasValidWidgetId = typeof widgetId === 'string' && widgetId.length > 0
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -28,7 +28,7 @@ export default function LiveChat({ siteSettings }: LiveChatProps) {
 
   useEffect(() => {
     // Only connect if LiveChat is enabled and has a valid widget ID
-    if (liveChatEnabled && hasValidWidgetId) {
+    if (liveChatEnabled && hasValidWidgetId && widgetId) {
       setIsConnected(true)
       
       // Simulate incoming messages
@@ -59,7 +59,7 @@ export default function LiveChat({ siteSettings }: LiveChatProps) {
     } else {
       setIsConnected(false)
     }
-  }, [liveChatEnabled, hasValidWidgetId])
+  }, [liveChatEnabled, hasValidWidgetId, widgetId])
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()

@@ -13,9 +13,9 @@ export default function LiveChat({ siteSettings }: LiveChatProps) {
   const [isConnected, setIsConnected] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Check if LiveChat is enabled and has a widget ID
+  // Check if LiveChat is enabled and has a widget ID with proper null checks
   const liveChatEnabled = siteSettings?.metadata?.livechat_enabled === true
-  const widgetId = siteSettings?.metadata?.livechat_widget_id ?? ''
+  const widgetId = siteSettings?.metadata?.livechat_widget_id || ''
   const hasValidWidgetId = widgetId.length > 0
 
   const scrollToBottom = () => {
@@ -42,7 +42,7 @@ export default function LiveChat({ siteSettings }: LiveChatProps) {
         ]
         
         const randomIndex = Math.floor(Math.random() * sampleMessages.length)
-        const randomMessage = sampleMessages[randomIndex] ?? 'Great stream!'
+        const randomMessage = sampleMessages[randomIndex] || 'Great stream!'
         const randomUser = `User${Math.floor(Math.random() * 1000)}`
         
         const newMsg: ChatMessage = {

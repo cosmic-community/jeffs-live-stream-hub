@@ -31,7 +31,8 @@ export default function LiveChat() {
         'Amazing content as always',
       ]
       
-      const randomMessage = sampleMessages[Math.floor(Math.random() * sampleMessages.length)] ?? 'Great stream!'
+      const randomIndex = Math.floor(Math.random() * sampleMessages.length)
+      const randomMessage = sampleMessages[randomIndex] || 'Great stream!'
       const randomUser = `User${Math.floor(Math.random() * 1000)}`
       
       const newMsg: ChatMessage = {

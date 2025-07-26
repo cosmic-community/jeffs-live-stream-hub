@@ -32,14 +32,13 @@ export default function LiveChat() {
       ]
       
       const randomIndex = Math.floor(Math.random() * sampleMessages.length)
-      const randomMessage = sampleMessages[randomIndex]
-      const safeMessage = randomMessage || 'Great stream!'
+      const randomMessage = sampleMessages[randomIndex] ?? 'Great stream!'
       const randomUser = `User${Math.floor(Math.random() * 1000)}`
       
       const newMsg: ChatMessage = {
         id: Date.now().toString(),
         username: randomUser,
-        message: safeMessage,
+        message: randomMessage,
         timestamp: new Date().toISOString(),
       }
       

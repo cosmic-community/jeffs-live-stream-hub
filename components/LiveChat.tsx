@@ -28,7 +28,7 @@ export default function LiveChat({ siteSettings }: LiveChatProps) {
 
   useEffect(() => {
     // Only connect if LiveChat is enabled and has a valid widget ID
-    if (liveChatEnabled && hasValidWidgetId && widgetId) {
+    if (liveChatEnabled && hasValidWidgetId && typeof widgetId === 'string') {
       setIsConnected(true)
       
       // Simulate incoming messages

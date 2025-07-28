@@ -3,45 +3,41 @@ export interface SiteSettings {
   title: string
   slug: string
   metadata: {
-    maintenance_mode?: boolean
-    maintenance_message?: string
-    contact_email?: string
-    google_analytics_id?: string
+    maintenance_mode: boolean
+    maintenance_message: string
+    contact_email: string
+    google_analytics_id: string
   }
 }
 
-export interface StreamStatus {
-  isLive: boolean
-  viewerCount: number
-  streamTitle: string
-  startTime?: string
-}
-
-export interface VideoContent {
+export interface VideoObject {
   id: string
   title: string
   slug: string
-  content?: string
   metadata: {
-    description?: string
-    video_url?: string
+    video_url: string
+    description: string
     thumbnail?: {
       imgix_url: string
     }
     duration?: string
-    featured?: boolean
-    category?: string
-    tags?: string[]
+    view_count?: number
+    published_date: string
   }
-  created_at: string
 }
 
-export interface CosmicObject {
+export interface StreamData {
   id: string
   title: string
   slug: string
-  content?: string
-  metadata: Record<string, any>
-  created_at: string
-  modified_at: string
+  metadata: {
+    stream_url: string
+    is_live: boolean
+    description: string
+    thumbnail?: {
+      imgix_url: string
+    }
+    viewer_count?: number
+    start_time?: string
+  }
 }

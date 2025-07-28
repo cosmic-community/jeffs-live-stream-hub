@@ -1,5 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk'
-import { SiteSettings, VideoContent } from '@/types'
+import { VideoContent } from '@/types'
 
 // Initialize Cosmic client
 const cosmic = createBucketClient({
@@ -7,23 +7,6 @@ const cosmic = createBucketClient({
   readKey: process.env.COSMIC_READ_KEY as string,
   writeKey: process.env.COSMIC_WRITE_KEY as string,
 })
-
-export async function getSiteSettings(): Promise<SiteSettings | null> {
-  try {
-    const { object } = await cosmic.objects
-      .findOne({
-        type: 'site-settings',
-        slug: 'site-configuration'
-      })
-      .props(['title', 'slug', 'metadata'])
-      .depth(1)
-    
-    return object as SiteSettings
-  } catch (error) {
-    console.error('Error fetching site settings:', error)
-    return null
-  }
-}
 
 export async function getFeaturedVideos(): Promise<VideoContent[]> {
   try {
@@ -50,7 +33,7 @@ export async function getAllVideos(): Promise<VideoContent[]> {
         type: 'videos'
       })
       .props(['title', 'slug', 'metadata', 'created_at'])
-      .depth(1)
+      .depth(1)  
       .sort('-created_at')
     
     return objects as VideoContent[]

@@ -15,7 +15,7 @@ export default function LiveChat({ widgetId, enabled = false }: LiveChatProps) {
     }
 
     // Ensure widgetId is a valid string before using it
-    const validWidgetId: string = widgetId.trim()
+    const validWidgetId = widgetId.trim()
     if (!validWidgetId) {
       console.warn('LiveChat widget ID is empty')
       return

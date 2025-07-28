@@ -1,6 +1,5 @@
 import { getSiteSettings, getFeaturedVideos } from '@/lib/cosmic'
 import StreamPlayer from '@/components/StreamPlayer'
-import LiveChat from '@/components/LiveChat'
 import FeaturedVideos from '@/components/FeaturedVideos'
 import StreamStatus from '@/components/StreamStatus'
 
@@ -23,7 +22,7 @@ export default async function HomePage() {
               </span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              Your ultimate destination for live streaming, gaming content, and interactive community experiences.
+              Your ultimate destination for live streaming, webcam content, and screen sharing experiences.
             </p>
           </div>
         </div>
@@ -31,20 +30,10 @@ export default async function HomePage() {
 
       {/* Stream Section */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Stream */}
-            <div className="lg:col-span-2">
-              <StreamStatus />
-              <div className="mt-6">
-                <StreamPlayer />
-              </div>
-            </div>
-            
-            {/* Chat */}
-            <div className="lg:col-span-1">
-              <LiveChat siteSettings={siteSettings} />
-            </div>
+        <div className="max-w-6xl mx-auto">
+          <StreamStatus />
+          <div className="mt-6">
+            <StreamPlayer />
           </div>
         </div>
       </section>

@@ -1,32 +1,8 @@
-export interface CosmicObject {
+export interface SiteSettings {
   id: string
   title: string
   slug: string
-  content?: string
-  status: 'published' | 'draft'
-  created_at: string
-  modified_at: string
-  thumbnail?: string
-  metadata: Record<string, any>
-}
-
-export interface SiteSettings extends CosmicObject {
   metadata: {
-    site_name?: string
-    site_description?: string
-    site_logo?: {
-      imgix_url: string
-    }
-    social_links?: {
-      twitter?: string
-      youtube?: string
-      twitch?: string
-      discord?: string
-    }
-    primary_color?: string
-    secondary_color?: string
-    livechat_enabled?: boolean
-    livechat_widget_id?: string
     maintenance_mode?: boolean
     maintenance_message?: string
     contact_email?: string
@@ -34,39 +10,37 @@ export interface SiteSettings extends CosmicObject {
   }
 }
 
-export interface VideoContent extends CosmicObject {
-  metadata: {
-    video_url: string
-    video_type: 'youtube' | 'twitch' | 'vimeo' | 'direct'
-    duration?: string
-    category?: string
-    featured?: boolean
-    thumbnail_image?: {
-      imgix_url: string
-    }
-    description?: string
-    tags?: string[]
-  }
-}
-
 export interface StreamStatus {
   isLive: boolean
-  viewerCount?: number
-  streamTitle?: string
-  streamUrl?: string
+  viewerCount: number
+  streamTitle: string
 }
 
-export interface ChatMessage {
+export interface VideoContent {
   id: string
-  username: string
-  message: string
-  timestamp: string
-  userId?: string
+  title: string
+  slug: string
+  content?: string
+  metadata: {
+    description?: string
+    video_url?: string
+    thumbnail?: {
+      imgix_url: string
+    }
+    duration?: string
+    featured?: boolean
+    category?: string
+    tags?: string[]
+  }
+  created_at: string
 }
 
-export interface User {
+export interface CosmicObject {
   id: string
-  username: string
-  avatar?: string
-  role: 'viewer' | 'moderator' | 'admin'
+  title: string
+  slug: string
+  content?: string
+  metadata: Record<string, any>
+  created_at: string
+  modified_at: string
 }

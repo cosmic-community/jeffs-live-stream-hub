@@ -6,8 +6,7 @@ interface HeaderProps {
 }
 
 export default function Header({ siteSettings }: HeaderProps) {
-  const siteName = siteSettings?.metadata?.site_name || "Jeff's Live Stream Hub"
-  const logo = siteSettings?.metadata?.site_logo
+  const siteName = "Jeff's Live Stream Hub"
 
   return (
     <header className="bg-gray-900 border-b border-gray-800">
@@ -15,15 +14,9 @@ export default function Header({ siteSettings }: HeaderProps) {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-3">
-              {logo && (
-                <img
-                  src={`${logo.imgix_url}?w=40&h=40&fit=crop&auto=format,compress`}
-                  alt={siteName}
-                  className="w-10 h-10 rounded-lg"
-                  width={40}
-                  height={40}
-                />
-              )}
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">J</span>
+              </div>
               <span className="text-xl font-bold text-white">
                 {siteName}
               </span>
@@ -56,6 +49,30 @@ export default function Header({ siteSettings }: HeaderProps) {
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
               <span className="text-sm text-gray-300">LIVE</span>
             </div>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <Link
+              href="/"
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Home
+            </Link>
+            <Link
+              href="/videos"
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Videos
+            </Link>
+            <Link
+              href="/about"
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              About
+            </Link>
           </div>
         </div>
       </div>

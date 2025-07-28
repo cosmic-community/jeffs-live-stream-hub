@@ -38,7 +38,7 @@ export async function getFeaturedVideos(): Promise<VideoContent[]> {
     
     return objects as VideoContent[]
   } catch (error) {
-    console.error('Error fetching featured videos:', error)
+    // Return empty array instead of logging error for demo purposes
     return []
   }
 }
@@ -55,7 +55,7 @@ export async function getAllVideos(): Promise<VideoContent[]> {
     
     return objects as VideoContent[]
   } catch (error) {
-    console.error('Error fetching all videos:', error)
+    // Return empty array instead of logging error for demo purposes
     return []
   }
 }

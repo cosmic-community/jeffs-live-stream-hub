@@ -1,72 +1,87 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { StreamStatus as StreamStatusType } from '@/types'
+
+interface StreamStatusData {
+  isLive: boolean
+  viewerCount: number
+  streamTitle: string
+  startTime?: string
+}
 
 export default function StreamStatus() {
-  const [status, setStatus] = useState<StreamStatusType>({
-    isLive: false,
-    viewerCount: 0,
-    streamTitle: 'Getting ready to stream...'
+  const [status, setStatus] = useState<StreamStatusData>({
+    isLive: true,
+    viewerCount: 1234,
+    streamTitle: "Live Gaming Session - Building Something Cool!",
+    startTime: new Date().toISOString()
   })
 
+  const [uptime, setUptime] = useState<string>('0:00:00')
+
   useEffect(() => {
-    // Simulate stream status updates
-    const updateStatus = () => {
-      setStatus(prev => ({
-        ...prev,
-        isLive: Math.random() > 0.3,
-        viewerCount: Math.floor(Math.random() * 200) + 25,
-        streamTitle: prev.isLive ? 'Live Gaming Session' : 'Stream will begin shortly'
-      }))
+    if (!status.isLive || !status.startTime) return
+
+    const updateUptime = () => {
+      const start = new Date(status.startTime!)
+      const now = new Date()
+      const diff = now.getTime() - start.getTime()
+      
+      const hours = Math.floor(diff / (1000 * 60 * 60))
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+      
+      setUptime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
     }
 
-    updateStatus()
-    const interval = setInterval(updateStatus, 15000)
+    const interval = setInterval(updateUptime, 1000)
+    updateUptime() // Initial call
 
     return () => clearInterval(interval)
-  }, [])
+  }, [status.isLive, status.startTime])
 
   return (
-    <div className="bg-gray-900 rounded-lg p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-white">Stream Status</h2>
-        <div className="flex items-center space-x-2">
-          <div className={`w-3 h-3 rounded-full ${status.isLive ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}></div>
-          <span className={`text-sm font-medium ${status.isLive ? 'text-red-400' : 'text-gray-400'}`}>
-            {status.isLive ? 'LIVE' : 'OFFLINE'}
-          </span>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        <div>
-          <p className="text-sm text-gray-400">Current Status</p>
-          <p className="text-white font-medium">{status.streamTitle}</p>
-        </div>
-
-        {status.isLive && (
-          <div>
-            <p className="text-sm text-gray-400">Viewers</p>
-            <p className="text-white font-medium">{status.viewerCount} watching now</p>
+    <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center space-x-4">
+          <div className={`flex items-center space-x-2 px-3 py-1 rounded-full ${
+            status.isLive ? 'bg-red-600' : 'bg-gray-600'
+          }`}>
+            <div className={`w-2 h-2 rounded-full ${
+              status.isLive ? 'bg-white animate-pulse' : 'bg-gray-400'
+            }`}></div>
+            <span className="text-white text-sm font-medium">
+              {status.isLive ? 'LIVE' : 'OFFLINE'}
+            </span>
           </div>
-        )}
+          
+          <div>
+            <h2 className="text-white text-lg font-semibold">{status.streamTitle}</h2>
+            {status.isLive && (
+              <p className="text-gray-400 text-sm">
+                Started {uptime} ago
+              </p>
+            )}
+          </div>
+        </div>
 
-        <div>
-          <p className="text-sm text-gray-400">Next Stream</p>
-          <p className="text-white font-medium">
-            {status.isLive ? 'Now!' : 'Check back soon!'}
-          </p>
+        <div className="flex items-center space-x-6 text-sm">
+          <div className="flex items-center space-x-2">
+            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span className="text-gray-400">
+              {status.viewerCount.toLocaleString()} viewers
+            </span>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-gray-400">HD Quality</span>
+          </div>
         </div>
       </div>
-
-      {!status.isLive && (
-        <div className="mt-4 p-3 bg-gray-800 rounded-md">
-          <p className="text-sm text-gray-300">
-            Get notified when the stream goes live! Follow on social media for updates.
-          </p>
-        </div>
-      )}
     </div>
   )
 }

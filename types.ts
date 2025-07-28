@@ -14,6 +14,7 @@ export interface StreamStatus {
   isLive: boolean
   viewerCount: number
   streamTitle: string
+  startTime?: string
 }
 
 export interface VideoContent {

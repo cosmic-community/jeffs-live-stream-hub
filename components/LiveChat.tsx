@@ -26,7 +26,7 @@ export default function LiveChat({ widgetId, enabled = false }: LiveChatProps) {
     script.async = true
     script.src = 'https://widget.livechat.com/static/js/widget.js'
     
-    // Add the LiveChat configuration
+    // Add the LiveChat configuration - now TypeScript knows validWidgetId is a string
     ;(window as any).__lc = {
       license: validWidgetId,
       integration_name: "manual_onboarding"

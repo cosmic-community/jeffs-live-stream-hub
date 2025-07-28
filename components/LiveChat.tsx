@@ -33,7 +33,7 @@ export default function LiveChat({ settings }: LiveChatProps) {
     script.async = true
     script.src = 'https://widget.livechat.com/widget.js'
     
-    // Set up LiveChat configuration
+    // Set up LiveChat configuration - now TypeScript knows widgetId is a valid string
     window.__lc = window.__lc || {}
     window.__lc.license = widgetId
     
